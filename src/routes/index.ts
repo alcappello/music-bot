@@ -1,5 +1,6 @@
 import {NextFunction, Request, Response, Router} from 'express';
 import {MusicBrainzService} from '../services/MusicBrainzService';
+import {Cache} from '../services/Cache';
 
 /**
  * Homepage Route
@@ -17,7 +18,7 @@ export class IndexRoute {
      */
     public static create(router: Router) {
         // add home page route
-        router.get('/', (req: Request, res: Response, next: NextFunction) => {
+        router.get('/', Cache.checkCache(10), (req: Request, res: Response, next: NextFunction) => {
             IndexRoute.index(req, res, next);
         });
     }
