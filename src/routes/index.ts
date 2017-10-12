@@ -1,6 +1,4 @@
 import {NextFunction, Request, Response, Router} from 'express';
-import {MusicBrainzService} from '../services/MusicBrainzService';
-import {Cache} from '../services/Cache';
 
 /**
  * Homepage Route
@@ -18,7 +16,7 @@ export class IndexRoute {
      */
     public static create(router: Router) {
         // add home page route
-        router.get('/', Cache.checkCache(10), (req: Request, res: Response, next: NextFunction) => {
+        router.get('/', (req: Request, res: Response, next: NextFunction) => {
             IndexRoute.index(req, res, next);
         });
     }
@@ -34,9 +32,6 @@ export class IndexRoute {
      */
     public static index(req: Request, res: Response, next: NextFunction) {
 
-        let artist = MusicBrainzService.getArtist('5b11f4ce-a62d-471e-81fc-a69a8278c7da');
-        artist.then(data => {
-            res.send(data);
-        });
+        res.send('Hello World!');
     }
 }

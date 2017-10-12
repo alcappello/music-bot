@@ -1,5 +1,6 @@
 import {NextFunction, Request, Response, Router} from 'express';
 import {MusicBrainzService} from '../services/MusicBrainzService';
+import {Cache} from '../services/Cache';
 
 /**
  * / route
@@ -17,9 +18,13 @@ export class APIRoute {
      */
     public static create(router: Router) {
         // Get artist by MBID
-        router.get('/api/artist/:id', (req: Request, res: Response, next: NextFunction) => {
-            APIRoute.getArtist(req, res, next);
-        });
+        router.get(
+            '/api/artist/:id',
+            Cache.checkCache(+process.env.CACHED_SECONDS),
+            (req: Request, res: Response, next: NextFunction) => {
+                APIRoute.getArtist(req, res, next).then();
+            },
+        );
     }
 
     /**
@@ -31,11 +36,8 @@ export class APIRoute {
      * @param res {Response} The express Response object.
      * @param next {NextFunction} Execute the next method.
      */
-    public static getArtist(req: Request, res: Response, next: NextFunction) {
-
-        let artist = MusicBrainzService.getArtist('5b11f4ce-a62d-471e-81fc-a69a8278c7da');
-        artist.then(data => {
-            res.send(data);
-        });
+    public static async getArtist(req: Request, res: Response, next: NextFunction) {
+        const artist = await MusicBrainzService.getArtist(req.params.id);
+        res.send(artist);
     }
 }
