@@ -1,0 +1,30 @@
+version: "2.1"
+
+services:
+    node:
+        build: .
+        container_name: music_node
+        ports:
+            - ${NODE_PORT}:${NODE_PORT}
+        environment:
+            - VIRTUAL_HOST=music.dev
+            - NODE_ENV=${ENVIRONMENT}
+        networks:
+            - proxy
+        volumes:
+            - ./:/app
+        command: ${START_COMMAND}
+
+    nginx-proxy:
+        container_name: music_nginx
+        image: jwilder/nginx-proxy
+        ports:
+          - ${NGINX_PORT}:${NGINX_PORT}
+        volumes:
+          - /var/run/docker.sock:/tmp/docker.sock:ro
+        networks:
+            - proxy
+
+
+networks:
+    proxy:
