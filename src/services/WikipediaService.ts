@@ -2,7 +2,7 @@ import { RemoteAPIService } from './RemoteAPIService';
 
 export class WikipediaService extends RemoteAPIService {
 
-    static requestLimit = process.env.WIKIPEDIA_REQUEST_LIMIT;
+    private static requestLimit = process.env.WIKIPEDIA_REQUEST_LIMIT;
 
     private static jobName = 'Wikipedia';
 
@@ -12,20 +12,18 @@ export class WikipediaService extends RemoteAPIService {
         // Register the queue's processing behaviour
         WikipediaService.queue.process(WikipediaService.jobName, (job, done) => {
             // Fire a request
-            WikipediaService.get(job.data, done);
-            // TODO: wait before the next request
+            WikipediaService.get(job.data.options, done);
         });
     }
 
-    public static async getArtist(mbid: string): Promise<any> {
+    public static async getArtist(name: string): Promise<any> {
 
         const data = {
             options: {
                 host: 'en.wikipedia.org',
-                path: `/ws/2/artist/${mbid}?&fmt=json&inc=url-rels+release-groups`,
+                path: `/w/api.php?action=query&format=json&prop=extracts&exintro=true&redirects=true&titles=${name}`,
                 headers: {'user-agent': 'music-api (alessandro@cappello.se)'},
             },
-            waitFor: WikipediaService.requestLimit,
         };
 
         return WikipediaService.getWithPromise(WikipediaService.jobName, data);

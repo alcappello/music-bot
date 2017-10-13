@@ -2,7 +2,7 @@ import { RemoteAPIService } from './RemoteAPIService';
 
 export class MusicBrainzService extends RemoteAPIService {
 
-    static requestLimit = process.env.MUSICBRAINZ_REQUEST_LIMIT;
+    private static requestLimit = process.env.MUSICBRAINZ_REQUEST_LIMIT;
 
     private static jobName = 'MusicBrainz';
 
@@ -13,7 +13,7 @@ export class MusicBrainzService extends RemoteAPIService {
         MusicBrainzService.queue.process(MusicBrainzService.jobName, (job, done) => {
             // Fire a request
             MusicBrainzService.get(job.data.options, done);
-            // TODO: wait before the next request
+            // TODO: wait before firing the next request
         });
     }
 

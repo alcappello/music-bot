@@ -8,6 +8,8 @@ import { IndexRoute } from './routes';
 import { APIRoute } from './routes/api';
 import {RemoteAPIService} from './services/RemoteAPIService';
 import {MusicBrainzService} from './services/MusicBrainzService';
+import {WikipediaService} from './services/WikipediaService';
+import {CoverArtService} from './services/CoverArtService';
 
 /**
  * The server.
@@ -57,8 +59,10 @@ export class Server {
      * @method api
      */
     public api() {
-        // Init the API queue
+        // Init the API queue and the requests
         MusicBrainzService.init();
+        WikipediaService.init();
+        CoverArtService.init();
 
         const router = express.Router();
 

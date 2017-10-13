@@ -1,10 +1,9 @@
-import * as http from 'http';
+import * as request from 'request';
 import { createQueue, DoneCallback, Job, ProcessCallback, Queue, Worker } from 'kue';
-
 
 export class RemoteAPIService {
 
-    // The queue used to process the http requests
+    // The queue used to process the https requests
     protected static queue: Queue;
 
     protected static init() {
@@ -19,42 +18,26 @@ export class RemoteAPIService {
         });
     }
 
-    public static get(options: object, done: DoneCallback) {
+    public static get(options: any, done: DoneCallback) {
 
-        http.get(options, (res) => {
+        request({
+            followAllRedirects: true,
+            url: options.path,
+            baseUrl: `https://${options.host}`,
+            headers: options.headers,
+        },  (error, response, body) => {
 
-            const {statusCode} = res;
-            const contentType = res.headers['content-type'];
-
-            let error;
-            if (statusCode !== 200) {
-                error = new Error('Request Failed.\n' +
-                    `Status Code: ${statusCode}`);
-            } else if (typeof contentType === 'string' && !/^application\/json/.test(contentType)) {
-                error = new Error('Invalid content-type.\n' +
-                    `Expected application/json but received ${contentType}`);
-            }
-            if (error) {
-                // consume response data to free up memory
-                res.resume();
-                done(error);
-            }
-
-            let rawData = '';
-            res.on('data', (chunk) => {
-                rawData += chunk;
-            });
-            res.on('end', () => {
-                try {
-                    const parsedData = JSON.parse(rawData);
-                    done(undefined, parsedData);
-                } catch (e) {
-                    done(e.message);
+            if (response.statusCode === 200) {
+                done(error, JSON.parse(body));
+            } else {
+                if (!error) {
+                    done(new Error(`Status: ${response.statusCode} (${response.statusMessage})`));
+                } else {
+                    done(error);
                 }
-            });
-        }).on('error', (e) => {
-            done(new Error(`Got error: ${e.message}`));
+            }
         });
+
     }
 
     protected static async getWithPromise(jobName: string, data: any): Promise<any> {
