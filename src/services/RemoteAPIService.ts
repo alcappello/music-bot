@@ -1,12 +1,14 @@
+import { createQueue, DoneCallback, Queue } from 'kue';
 import * as request from 'request';
-import { createQueue, DoneCallback, Job, ProcessCallback, Queue, Worker } from 'kue';
 
 export class RemoteAPIService {
 
     // The queue used to process the https requests
     protected static queue: Queue;
 
-    protected static init() {
+    protected static workers: number;
+
+    protected static init(): void {
 
         // Create a Queue, or get the singleton reference if it already exists
         RemoteAPIService.queue = createQueue({
@@ -18,7 +20,7 @@ export class RemoteAPIService {
         });
     }
 
-    public static get(options: any, done: DoneCallback) {
+    public static get(options: any, done: DoneCallback): void {
 
         request({
             followAllRedirects: true,
@@ -27,14 +29,12 @@ export class RemoteAPIService {
             headers: options.headers,
         },  (error, response, body) => {
 
-            if (response.statusCode === 200) {
+            if (response && response.statusCode === 200) {
                 done(error, JSON.parse(body));
+            } else if (!error) {
+                done(new Error(`Status: ${response.statusCode} (${response.statusMessage})`));
             } else {
-                if (!error) {
-                    done(new Error(`Status: ${response.statusCode} (${response.statusMessage})`));
-                } else {
-                    done(error);
-                }
+                done(error);
             }
         });
 

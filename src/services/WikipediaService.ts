@@ -2,17 +2,16 @@ import { RemoteAPIService } from './RemoteAPIService';
 
 export class WikipediaService extends RemoteAPIService {
 
-    private static requestLimit = process.env.WIKIPEDIA_REQUEST_LIMIT;
-
     private static jobName = 'Wikipedia';
 
     public static init() {
         super.init();
+        this.workers = +process.env.WIKIPEDIA_WORKERS;
 
         // Register the queue's processing behaviour
-        WikipediaService.queue.process(WikipediaService.jobName, (job, done) => {
+        this.queue.process(this.jobName, this.workers, (job, done) => {
             // Fire a request
-            WikipediaService.get(job.data.options, done);
+            this.get(job.data.options, done);
         });
     }
 
@@ -26,6 +25,6 @@ export class WikipediaService extends RemoteAPIService {
             },
         };
 
-        return WikipediaService.getWithPromise(WikipediaService.jobName, data);
+        return this.getWithPromise(this.jobName, data);
     }
 }

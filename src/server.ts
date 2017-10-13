@@ -1,15 +1,17 @@
 import * as bodyParser from 'body-parser';
 import * as errorHandler from 'errorhandler';
+import { EventEmitter } from 'events';
 import * as express from 'express';
 import * as logger from 'morgan';
 
 // Routes
 import { IndexRoute } from './routes';
 import { APIRoute } from './routes/api';
-import {RemoteAPIService} from './services/RemoteAPIService';
-import {MusicBrainzService} from './services/MusicBrainzService';
-import {WikipediaService} from './services/WikipediaService';
-import {CoverArtService} from './services/CoverArtService';
+import { CoverArtService } from './services/CoverArtService';
+import { MusicBrainzService } from './services/MusicBrainzService';
+import { WikipediaService } from './services/WikipediaService';
+
+EventEmitter.defaultMaxListeners = 200;
 
 /**
  * The server.

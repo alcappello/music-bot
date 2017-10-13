@@ -2,18 +2,16 @@ import { RemoteAPIService } from './RemoteAPIService';
 
 export class MusicBrainzService extends RemoteAPIService {
 
-    private static requestLimit = process.env.MUSICBRAINZ_REQUEST_LIMIT;
-
     private static jobName = 'MusicBrainz';
 
     public static init() {
         super.init();
+        this.workers = +process.env.MUSICBRAINZ_WORKERS;
 
         // Register the queue's processing behaviour
-        MusicBrainzService.queue.process(MusicBrainzService.jobName, (job, done) => {
+        this.queue.process(this.jobName, this.workers, (job, done) => {
             // Fire a request
-            MusicBrainzService.get(job.data.options, done);
-            // TODO: wait before firing the next request
+            this.get(job.data.options, done);
         });
     }
 
@@ -25,9 +23,8 @@ export class MusicBrainzService extends RemoteAPIService {
                 path: `/ws/2/artist/${mbid}?&fmt=json&inc=url-rels+release-groups`,
                 headers: {'user-agent': 'music-api'},
             },
-            waitFor: MusicBrainzService.requestLimit,
         };
 
-        return MusicBrainzService.getWithPromise(MusicBrainzService.jobName, data);
+        return this.getWithPromise(this.jobName, data);
     }
 }

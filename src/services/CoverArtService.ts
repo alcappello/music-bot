@@ -2,17 +2,16 @@ import { RemoteAPIService } from './RemoteAPIService';
 
 export class CoverArtService extends RemoteAPIService {
 
-    private static requestLimit = process.env.COVERART_REQUEST_LIMIT;
-
     private static jobName = 'CoverArt';
 
     public static init() {
         super.init();
+        this.workers = +process.env.COVERART_WORKERS;
 
         // Register the queue's processing behaviour
-        CoverArtService.queue.process(CoverArtService.jobName, 100, (job, done) => {
+        this.queue.process(this.jobName, this.workers, (job, done) => {
             // Fire a request
-            CoverArtService.get(job.data.options, done);
+            this.get(job.data.options, done);
         });
     }
 
@@ -29,6 +28,6 @@ export class CoverArtService extends RemoteAPIService {
             },
         };
 
-        return CoverArtService.getWithPromise(CoverArtService.jobName, data);
+        return this.getWithPromise(this.jobName, data);
     }
 }

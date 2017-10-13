@@ -1,10 +1,7 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import * as Q from 'q';
 
 import { Cache } from '../services/Cache';
-import { CoverArtService } from '../services/CoverArtService';
-import { MusicBrainzService } from '../services/MusicBrainzService';
-import { WikipediaService } from '../services/WikipediaService';
+import { MashupService } from '../services/MashupService';
 
 /**
  * / route
@@ -26,13 +23,13 @@ export class APIRoute {
             '/api/artist/:id',
             Cache.checkCache(+process.env.CACHED_SECONDS),
             (req: Request, res: Response, next: NextFunction) => {
-                APIRoute.getArtist(req, res, next).then();
+                APIRoute.getArtist(req, res, next);
             },
         );
     }
 
     /**
-     * Retrieve info about an artist
+     * Retrieve some info about a given artist
      *
      * @class APIRoute
      * @method getArtist
@@ -42,38 +39,10 @@ export class APIRoute {
      */
     public static async getArtist(req: Request, res: Response, next: NextFunction) {
         try {
-            const artist = await MusicBrainzService.getArtist(req.params.id);
-            const wikiRecord = artist.relations.find((x: any) => x.type === 'wikipedia');
-            const wikiName = wikiRecord.url.resource.replace('https://en.wikipedia.org/wiki/', '');
-            artist.biography = await WikipediaService.getArtist(wikiName);
-            const promises: Array<Promise<{}>> = [];
-
-            for (const album of artist['release-groups']) {
-
-                const promise = new Promise(async (resolve, reject) => {
-                    try {
-                        album.image = await CoverArtService.getImage(album.id);
-                        resolve(album.image);
-                    } catch (e) {
-                        album.image = '';
-                        reject(e);
-                    }
+            MashupService.fetchArtistData(req.params.id)
+                .then((artist) => {
+                    res.send(MashupService.aggregate(artist));
                 });
-
-                promises.push(promise);
-            }
-
-            // const promises = artist['release-groups'].map((album: any) => {
-            //     return CoverArtService.getImage(album.id);
-            // });
-
-            Q.allSettled(promises).then((results) => {
-                const content = results.map((user: any) => {
-                    return user.body;
-                });
-                console.log(results);
-                res.send(artist);
-            });
 
         } catch (e) {
             res.send('ERROR!: ' + e);
