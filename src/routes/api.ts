@@ -1,6 +1,6 @@
-import {NextFunction, Request, Response, Router} from 'express';
-import {MusicBrainzService} from '../services/MusicBrainzService';
-import {Cache} from '../services/Cache';
+import { NextFunction, Request, Response, Router } from 'express';
+import { Cache } from '../services/Cache';
+import { MusicBrainzService } from '../services/MusicBrainzService';
 
 /**
  * / route
@@ -37,7 +37,11 @@ export class APIRoute {
      * @param next {NextFunction} Execute the next method.
      */
     public static async getArtist(req: Request, res: Response, next: NextFunction) {
-        const artist = await MusicBrainzService.getArtist(req.params.id);
-        res.send(artist);
+        try {
+            const artist = await MusicBrainzService.getArtist(req.params.id);
+            res.send(artist);
+        } catch (error) {
+            res.send(error);
+        }
     }
 }

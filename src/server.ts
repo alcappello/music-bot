@@ -6,6 +6,8 @@ import * as logger from 'morgan';
 // Routes
 import { IndexRoute } from './routes';
 import { APIRoute } from './routes/api';
+import {RemoteAPIService} from './services/RemoteAPIService';
+import {MusicBrainzService} from './services/MusicBrainzService';
 
 /**
  * The server.
@@ -55,6 +57,9 @@ export class Server {
      * @method api
      */
     public api() {
+        // Init the API queue
+        MusicBrainzService.init();
+
         const router = express.Router();
 
         // API routes

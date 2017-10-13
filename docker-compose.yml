@@ -7,8 +7,22 @@ services:
         ports:
             - ${NODE_PORT}:${NODE_PORT}
         environment:
+            - VIRTUAL_HOST=music.dev
             - NODE_ENV=${ENVIRONMENT}
+        networks:
+            - redis
         volumes:
             - ./:/app
         command: ${START_COMMAND}
 
+    redis:
+        container_name: music_redis
+        image: redis:latest
+        ports:
+          - ${REDIS_PORT}:${REDIS_PORT}
+        networks:
+            - redis
+
+
+networks:
+    redis:
