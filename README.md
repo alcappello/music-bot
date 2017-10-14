@@ -35,11 +35,7 @@ Then, if a request is not already cached, it's inserted into a queue that is con
 ## Known issues and possible improvements
 
 ### Kue
-<<<<<<< HEAD
 [Kue](https://github.com/Automattic/kue) is the job queue library used by music-api. While it allows to [pause a worker](https://github.com/Automattic/kue#pause-processing) before the next job, its DefinitelyTyped definition does not.
-=======
-[Kue](https://github.com/Automattic/kue) is the job queue library used by music-api. While it allows to pause a worker before the next job, its TypeScript interface does not.
->>>>>>> 0b30a90f50041615d2ab5eb5600d5f429db65389
 
 It means that it's not possible to force music-api to wait 1 second between different unique requests to MusicBrainz, and this in turn means that when the number of unique requests per second is too high it might happen to exceed the MusicBrainz limit of requests per minute, leading the music-api to a temporary ban. All the requests during the ban are refused by music-api with a 503 status (temporary unavailable).  
 
