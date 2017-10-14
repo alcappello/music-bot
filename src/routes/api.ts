@@ -15,7 +15,7 @@ export class APIRoute {
         // Get artist by MBID
         router.get(
             '/api/artist/:id',
-            // Cache.checkCache(+process.env.CACHED_SECONDS),
+            Cache.checkCache(+process.env.CACHED_SECONDS),
             (req: Request, res: Response) => {
                 APIRoute.getArtist(req, res).then(/* do nothing */);
             },

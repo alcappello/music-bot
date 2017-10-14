@@ -26,3 +26,20 @@ Music-api accepts a request at `/api/artist/:mbid` and returns a JSON object in 
         ]
     }
     
+
+## Concurrency
+Music-api is built to handle multiple concurrent requests and it implements two different solutions to mitigate possible high traffic issues.  
+First of all, it has a simple in-memory cache that stores all the responses in a 10 minutes time-span and returns them without querying the external APIs again.  
+Then, if a request is not already cached, it's inserted into a queue that is consumed in limited numbers: this prevents music-api to flood the external services in case of many concurrent and unique requests.
+
+## Known issues and possible improvements
+
+### Kue
+[Kue](https://github.com/Automattic/kue) is the job queue library used by music-api. While it allows to pause a worker before the next job, its TypeScript interface does not.
+
+It means that it's not possible to force music-api to wait 1 second between different unique requests to MusicBrainz, and this in turn means that when the number of unique requests per second is too high it might happen to exceed the MusicBrainz limit of requests per minute, leading the music-api to a temporary ban. All the requests during the ban are refused by music-api with a 503 status (temporary unavailable).  
+
+Besides contributing to _@types/kue_, another solution could be to define a custom typing that extends _@types/kue_ with the pause feature, while writing a job queue service from scratches seems too much.
+
+### Memory Cache
+Caching on memory is quick and easy for a small API, but in a wider perspective with more endpoints and even a frontend it may be risky to clutch the memory with too much data. Storing the cache on disk would then be a better approach.
