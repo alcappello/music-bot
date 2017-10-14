@@ -3,7 +3,11 @@ This is a humble exercise in Node.js and TypeScript, where the main goal is to m
 The three external APIs are MusicBrainz, Wikipedia and CoverArtArchive. 
 
 ## How to install
-Simply clone this repository, create a .env file on the root directory based on the .env-example template and then run `docker-compose up -d` in order to build and run the Docker containers for this application. Note that .env contains, among other options, the exposed ports for the containers.  
+- Clone this repository.
+- Create a .env file on the project directory based on the .env-example template
+- Run `docker-compose up -d` in order to build and run the Docker containers for this application.  
+
+Note that .env contains, among other options, the exposed ports for the containers.  
 When the containers are up & running, it would be possible to reach music-api at the address `http://localhost/api/artist/:mbid`.
 
 ## Data format
