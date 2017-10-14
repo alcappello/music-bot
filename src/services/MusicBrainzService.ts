@@ -1,9 +1,15 @@
 import { RemoteAPIService } from './RemoteAPIService';
 
+/**
+ * MusicBrainz retrieval service
+ */
 export class MusicBrainzService extends RemoteAPIService {
 
     private static jobName = 'MusicBrainz';
 
+    /**
+     * Init the queue with the number of workers and a specific job
+     */
     public static init() {
         super.init();
         this.workers = +process.env.MUSICBRAINZ_WORKERS;
@@ -15,6 +21,9 @@ export class MusicBrainzService extends RemoteAPIService {
         });
     }
 
+    /**
+     * Get a specific artist from MusicBrainz, based on its MBID
+     */
     public static async getArtist(mbid: string): Promise<any> {
 
         const data = {

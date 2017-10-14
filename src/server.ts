@@ -7,28 +7,24 @@ import * as logger from 'morgan';
 // Routes
 import { IndexRoute } from './routes';
 import { APIRoute } from './routes/api';
+
+// Services
 import { CoverArtService } from './services/CoverArtService';
 import { MusicBrainzService } from './services/MusicBrainzService';
 import { WikipediaService } from './services/WikipediaService';
 
+// Max emitters raised because of kue.Queue
 EventEmitter.defaultMaxListeners = 200;
 
 /**
  * The server.
- *
- * @class Server
  */
 export class Server {
 
     public app: express.Application;
 
     /**
-     * Bootstrap the application.
-     *
-     * @class Server
-     * @method bootstrap
-     * @static
-     * @return {Server} Returns the newly created injector for this app.
+     * Bootstrap the application. Returns a newly created injector for this app.
      */
     public static bootstrap(): Server {
         return new Server();
@@ -36,9 +32,6 @@ export class Server {
 
     /**
      * Constructor.
-     *
-     * @class Server
-     * @constructor
      */
     constructor() {
         // create Express.js application
@@ -55,10 +48,7 @@ export class Server {
     }
 
     /**
-     * Create REST API routes
-     *
-     * @class Server
-     * @method api
+     * Create the API router and returns it
      */
     public api() {
         // Init the API queue and the requests
@@ -77,9 +67,6 @@ export class Server {
 
     /**
      * Configure application
-     *
-     * @class Server
-     * @method config
      */
     public config() {
         // mount logger
@@ -103,10 +90,6 @@ export class Server {
 
     /**
      * Create and return Router.
-     *
-     * @class Server
-     * @method config
-     * @return void
      */
     private routes() {
         const router = express.Router();

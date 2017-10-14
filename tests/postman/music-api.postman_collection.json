@@ -1,0 +1,59 @@
+{
+	"info": {
+		"name": "Music API",
+		"_postman_id": "4fe6558d-bde8-6f6d-3358-3725996d206a",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Artist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    ",
+							"});pm.test(\"Response is in JSON format\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(typeof jsonData).to.be.equal('object');",
+							"});",
+							"",
+							"pm.test(\"Response contains albums and images\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(Array.isArray(jsonData.albums)).to.be.true;",
+							"    if (jsonData.albums.length > 0) {",
+							"        pm.expect(jsonData.albums[0].image).to.be.string;",
+							"    }",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3000/api/artist/{{mbid}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"artist",
+						"{{mbid}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

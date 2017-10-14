@@ -1,20 +1,23 @@
+import { NextFunction, Request, RequestHandler, Response, Send } from 'express';
 import * as memcache from 'memory-cache';
-import {Request, RequestHandler, Response, NextFunction, Send} from 'express';
 
-interface CachedResponse extends Response {
-    sendResponse: Send
+interface ICachedResponse extends Response {
+    sendResponse: Send;
 }
 
+/**
+ * A simple in-memory cache to handle multiple requests to the same endpoint
+ */
 export class Cache {
 
     private static memory = memcache;
 
-    public static checkCache (duration: number): RequestHandler {
+    public static checkCache(duration: number): RequestHandler {
 
-        return (req: Request, res: CachedResponse, next: NextFunction) => {
+        return (req: Request, res: ICachedResponse, next: NextFunction) => {
             // Build a key from the request address
-            let key = '__express__' + req.originalUrl || req.url;
-            let cachedBody = Cache.memory.get(key);
+            const key = '__express__' + req.originalUrl || req.url;
+            const cachedBody = Cache.memory.get(key);
 
             // If the request is in cache, shoot it
             if (cachedBody) {
@@ -30,6 +33,6 @@ export class Cache {
                 };
                 next();
             }
-        }
+        };
     }
 }

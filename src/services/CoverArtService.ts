@@ -1,10 +1,16 @@
 import { RemoteAPIService } from './RemoteAPIService';
 
+/**
+ * CoverArtArchive retrieval service
+ */
 export class CoverArtService extends RemoteAPIService {
 
     private static jobName = 'CoverArt';
 
-    public static init() {
+    /**
+     * Init the queue with the number of workers and a specific job
+     */
+    public static init(): void {
         super.init();
         this.workers = +process.env.COVERART_WORKERS;
 
@@ -15,6 +21,9 @@ export class CoverArtService extends RemoteAPIService {
         });
     }
 
+    /**
+     * Retrieve an image from CoverArtArchive, based on the mbid of the album
+     */
     public static async getImage(mbid: string): Promise<any> {
 
         const data = {
@@ -22,8 +31,7 @@ export class CoverArtService extends RemoteAPIService {
                 host: 'coverartarchive.org',
                 path: `/release-group/${mbid}`,
                 headers: {
-                    'Accept': 'application/json',
-                    'Cache-Control': 'no-cache',
+                    accept: 'application/json',
                 },
             },
         };
