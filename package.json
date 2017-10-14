@@ -5,7 +5,9 @@
   "author": "Alessandro Cappello",
   "license": "MIT",
   "scripts": {
-    "start": "tsc --project src/ && node app.js",
+    "build": "tsc --project src/",
+    "start": "run-s build start:server",
+    "start:server": "node app.js",
     "watch": "run-p watch:*",
     "watch:server": "tsc --project src/ --watch",
     "watch:run": "nodemon app.js"
@@ -27,6 +29,7 @@
     "kue": "^0.11.6",
     "memory-cache": "^0.2.0",
     "morgan": "~1.9.0",
+    "npm-run-all": "^4.1.1",
     "q": "^1.5.0",
     "request": "^2.83.0",
     "typescript": "^2.5.3"
@@ -35,7 +38,6 @@
     "async": "^2.5.0",
     "newman": "^3.8.3",
     "nodemon": "^1.12.1",
-    "npm-run-all": "^4.1.1",
     "tslint": "^5.5.0"
   }
 }

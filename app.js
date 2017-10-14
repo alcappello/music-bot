@@ -12,7 +12,7 @@ dotenv.config();
 
 // Create http server
 let app = server.Server.bootstrap().app;
-let httpPort = normalizePort(process.env.PORT || '3000');
+let httpPort = normalizePort(process.env.NODE_PORT || '3000');
 app.set('port', httpPort);
 let httpServer = http.createServer(app);
 
