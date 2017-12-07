@@ -27,7 +27,7 @@ export class APIRoute {
      */
     public static async getArtist(req: Request, res: Response) {
 
-        MashupService.fetchArtistData(req.params.id)
+        MashupService.getArtistData(req.params.id)
             .then((artist) => {
                 res.send(MashupService.aggregate(artist));
             })

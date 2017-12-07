@@ -1,0 +1,70 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": [
+        "Hi", "How are you", "Is anyone there?", "Hello", "Good day"
+      ],
+      "responses": [
+        "Hello, thanks for visiting", "Good to see you again", "Hi there, how can I help?"
+      ],
+      "context_set": ""
+    },
+    {
+      "tag": "goodbye",
+      "patterns": [
+        "Bye", "See you later", "Goodbye"
+      ],
+      "responses": [
+        "See you later, thanks for visiting", "Have a nice day", "Bye! Come back again soon."
+      ]
+    },
+    {
+      "tag": "thanks",
+      "patterns": [
+        "Thanks", "Thank you", "That's helpful"
+      ],
+      "responses": [
+        "Happy to help!", "Any time!", "My pleasure"
+      ]
+    },
+    {
+      "tag": "bio",
+      "patterns": [
+        "Tell me more about", "Who is?", "I want to see the biography of", "Give me some info about"
+      ],
+      "responses": ["I'll grab some bio for you."]
+    },
+    {
+      "tag": "members",
+      "patterns": [
+        "Who are the members of the?", "Who plays the guitar in the?", "Who is the singer of the?",
+        "Who founded the?", "In which band plays?"
+      ],
+      "responses": ["Let's talk bands."]
+    },
+    {
+      "tag": "album",
+      "patterns": [
+        "When was released?", "Which albums are from the?", "Who published the album?",
+        "I want a list of the records by", "Can I have a list of the albums by"
+      ],
+      "responses": ["Albums, huh?"]
+    },
+    {
+      "tag": "genre",
+      "patterns": [
+        "What's your favourite genre?", "What do you like to listen?", "What's your favorite band or singer?", "Do you like?"
+      ],
+      "responses": ["All I want is disco music. And you?"],
+      "context_set": "favourite_genre"
+    },
+    {
+      "tag": "favgenre",
+      "patterns": ["I like to listen to", "My favourite band is", "I love", "My preferred artist is"],
+      "responses": ["Ok, thanks for sharing!"],
+      "context_filter": "favourite_genre"
+    }
+  ]
+}
+

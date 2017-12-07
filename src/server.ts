@@ -3,12 +3,14 @@ import * as errorHandler from 'errorhandler';
 import { EventEmitter } from 'events';
 import * as express from 'express';
 import * as logger from 'morgan';
+import * as path from 'path';
 
 // Routes
 import { IndexRoute } from './routes';
 import { APIRoute } from './routes/api';
 
 // Services
+import { Chatbot } from './services/Chatbot';
 import { CoverArtService } from './services/CoverArtService';
 import { MusicBrainzService } from './services/MusicBrainzService';
 import { WikipediaService } from './services/WikipediaService';
@@ -45,6 +47,17 @@ export class Server {
 
         // add routes
         this.routes();
+
+        const bot = new Chatbot();
+        bot.loadIntents(path.join(__dirname, '/../data/music.intents.json')).then(() => {
+            const sentence = 'Tell me the albums of the Beatles';
+
+            bot.train();
+
+            const predictions = bot.predict(sentence);
+            const responses = predictions[0].intent.responses;
+            console.log(responses[Math.floor(Math.random() * responses.length)], predictions[0].probability);
+        });
     }
 
     /**

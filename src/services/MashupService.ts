@@ -12,7 +12,7 @@ export class MashupService {
     /**
      * Fetch the required info and return an object with all the data from the APIs
      */
-    public static async fetchArtistData(mbid: string): Promise<any> {
+    public static async getArtistData(mbid: string): Promise<any> {
 
         return new Promise(async (resolve, reject) => {
 
@@ -63,7 +63,7 @@ export class MashupService {
     }
 
     /**
-     * Creates a well-formed JSON object from the raw data of fetchArtistData()
+     * Creates a well-formed JSON object from the raw data of getArtistData()
      */
     public static aggregate(artist: any): any {
 
